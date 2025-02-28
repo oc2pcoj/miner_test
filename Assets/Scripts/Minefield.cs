@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Minefield : MonoBehaviour, ICellClicked
@@ -14,6 +12,7 @@ public class Minefield : MonoBehaviour, ICellClicked
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private GameObject content;
 
+    private PlayerControls playerControls;
     private Cell[,] minefield;
     private bool firstClick = true;
     private Vector2Int firstCell;
@@ -60,9 +59,16 @@ public class Minefield : MonoBehaviour, ICellClicked
 
     private void Start() 
     {
+        playerControls = new PlayerControls();
+        playerControls.AnyKey.Enable();
+        playerControls.AnyKey.AnyKey.performed += OnKeyPerformed;
         GenerateMinefield();
     }
 
+    private void OnKeyPerformed(InputAction.CallbackContext context)
+    {
+        Restart();
+    }
     private void GenerateMinefield()
     {
         Debug.Assert(config.MinesCount < config.Width * config.Height, "Please, no");
@@ -114,6 +120,10 @@ public class Minefield : MonoBehaviour, ICellClicked
             }
         }
         minefield[firstCell.x, firstCell.y].OpenCell();
+        if (minefield[firstCell.x, firstCell.y].IsEmpty())
+        {
+            OpenCells(firstCell.x, firstCell.y);
+        }
     }
 
     private void CheckVictory()
@@ -161,12 +171,13 @@ public class Minefield : MonoBehaviour, ICellClicked
                     {
                         if (minefield[nx, ny].IsEmpty())
                         {
-                            if (!cellsToOpen.Contains(aroundCell) ) //&& isValidEmpty(checkingCell, aroundCell)
+                            if (!cellsToOpen.Contains(aroundCell)) //&& isValidEmpty(checkingCell, aroundCell)
                             {
                                 cellsToOpen.Add(aroundCell);
                             }
                         } 
-                        else {
+                        else 
+                        {
                             openedCells.Add(aroundCell);
                         }
                         minefield[nx, ny].OpenCell();
@@ -199,8 +210,6 @@ public class Minefield : MonoBehaviour, ICellClicked
     {  
         return mainCell.x == addingCell.x || mainCell.y == addingCell.y;        
     }
-    private int[] emtX = {-1, 0, 1, 0};
-    private int[] emtY = {0, 1, 0, -1};
     private int[] dx = {-1, -1, -1, 0, 1, 1, 1, 0};
     private int[] dy = {-1, 0, 1, 1, 1, 0, -1, -1};
 }

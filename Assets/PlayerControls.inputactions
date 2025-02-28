@@ -1,0 +1,34 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "AnyKey",
+            "id": "20947306-c8f7-4b7d-8cc6-67977a30b393",
+            "actions": [
+                {
+                    "name": "AnyKey",
+                    "type": "Value",
+                    "id": "200c1a70-81f1-4c5b-bb51-6121c42ea58e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ce493093-7e5a-4b0f-80b0-7ca815faf23f",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

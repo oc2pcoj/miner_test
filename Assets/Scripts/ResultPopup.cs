@@ -20,7 +20,7 @@ public class ResultPopup : MonoBehaviour
             title.color = Color.blue;
             title.text = "Victory!";
         }
-        ShowPanelWithDelay(2000);
+        ShowPanelWithDelay(1000);
     }
 
     private async void ShowPanelWithDelay(int delay)
