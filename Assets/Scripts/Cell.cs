@@ -30,6 +30,15 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         state = CellState.EMPTY;
     }
 
+    public void ResetCell()
+    {
+        SetState(CellState.EMPTY);
+        closedCellIcon.sprite = null;
+        closedCellIcon.gameObject.SetActive(true);
+        neighborsMinesCount.gameObject.SetActive(false);
+        opened = false;
+        marked = false;
+    }
     public bool IsMine()
     {
         return state == CellState.MINE; 
@@ -61,16 +70,20 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         } 
         else if (state == CellState.EMPTY)
         {
-            baseCellIcon.color = Color.gray;
+            SetDefaults();
         } 
         else
         {
-            baseCellIcon.color = Color.gray;
+            SetDefaults();
             neighborsMinesCount.gameObject.SetActive(true);
             neighborsMinesCount.text = state.ToString();
         } 
     }
-
+    private void SetDefaults()
+    {
+        stateIcon.gameObject.SetActive(false);
+        baseCellIcon.color = Color.gray;
+    }
     private void UpdateStateIcon(Sprite sprite)
     {
         stateIcon.gameObject.SetActive(true);

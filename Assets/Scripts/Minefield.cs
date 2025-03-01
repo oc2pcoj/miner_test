@@ -5,6 +5,16 @@ using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+public interface ICellClicked
+{
+    public void OnCellClick(int x, int y, bool open);
+}
+public class CellState 
+{
+    public static int MINE = -1;
+    public static int EMPTY = 0;
+}
+
 public class Minefield : MonoBehaviour, ICellClicked
 {
     [SerializeField] ResultPopup resultPopup;
@@ -13,7 +23,7 @@ public class Minefield : MonoBehaviour, ICellClicked
     [SerializeField] private GameObject content;
 
     private PlayerControls playerControls;
-    private Cell[,] minefield;
+    private Cell[,] minefield = null;
     private bool firstClick = true;
     private Vector2Int firstCell;
 
@@ -52,7 +62,7 @@ public class Minefield : MonoBehaviour, ICellClicked
         resultPopup.gameObject.SetActive(false);
         foreach (var cell in minefield)
         {
-            Destroy(cell.gameObject);
+            cell.ResetCell();
         }
         GenerateMinefield();
     }
@@ -71,8 +81,13 @@ public class Minefield : MonoBehaviour, ICellClicked
     }
     private void GenerateMinefield()
     {
-        Debug.Assert(config.MinesCount < config.Width * config.Height, "Please, no");
+        if (config.MinesCount >= config.Width * config.Height) 
+        {
+            Debug.Log("Wrong config");
+            return;
+        }
     
+        if (minefield != null) return;
         minefield = new Cell[config.Width, config.Height];
         var contentRect = content.GetComponent<RectTransform>(); 
         contentRect.sizeDelta = new Vector3(config.Width * 100f, config.Height * 100f, 0f);
@@ -171,7 +186,7 @@ public class Minefield : MonoBehaviour, ICellClicked
                     {
                         if (minefield[nx, ny].IsEmpty())
                         {
-                            if (!cellsToOpen.Contains(aroundCell)) //&& isValidEmpty(checkingCell, aroundCell)
+                            if (!cellsToOpen.Contains(aroundCell))
                             {
                                 cellsToOpen.Add(aroundCell);
                             }
@@ -206,20 +221,7 @@ public class Minefield : MonoBehaviour, ICellClicked
         }
         return mc;
     }
-    private bool isValidEmpty(Vector2Int mainCell, Vector2Int addingCell)
-    {  
-        return mainCell.x == addingCell.x || mainCell.y == addingCell.y;        
-    }
     private int[] dx = {-1, -1, -1, 0, 1, 1, 1, 0};
     private int[] dy = {-1, 0, 1, 1, 1, 0, -1, -1};
 }
 
-public class CellState 
-{
-    public static int MINE = -1;
-    public static int EMPTY = 0;
-}
-public interface ICellClicked
-{
-    public void OnCellClick(int x, int y, bool open);
-}

@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Minefield.cs" />
     <Compile Include="Assets\Scripts\Configs\ResourcesConfig.cs" />
     <Compile Include="Assets\Scripts\ResultPopup.cs" />
+    <Compile Include="Assets\PlayerControls.cs" />
     <Compile Include="Assets\Scripts\Configs\GameConfig.cs" />
     <Compile Include="Assets\Scripts\Cell.cs" />
   </ItemGroup>
